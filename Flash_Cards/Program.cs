@@ -1,2 +1,20 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine( "Hello, World!" );
+﻿using Flash_Cards.Data;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+
+//Configure SeriLog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+//Configure Secrets
+var config = new ConfigurationBuilder()
+    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    .AddJsonFile("Secrets.json", optional: true, reloadOnChange: true)
+    .AddUserSecrets<Program>()
+    .Build();
+
+var connectionString = config.GetConnectionString("DefaultConnection");
+
+var db = new FlashCardContext(connectionString);
