@@ -96,4 +96,29 @@ internal class FlashCardContext
         return stacks;
     }
 
+    internal Stack? GetStackById( int input )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"SELECT * FROM Stacks WHERE Id = @id";
+        command.Parameters.AddWithValue( "@id", input );
+        var reader = command.ExecuteReader();
+        reader.Read();
+
+        //check if stack exists
+        if ( reader.HasRows )
+        {
+            var stack = new Stack
+            {
+                Id = (int)reader["Id"],
+                Name = (string)reader["Name"]
+            };
+            return stack;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

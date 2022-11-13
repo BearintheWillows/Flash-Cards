@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using Flash_Cards.Data;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,19 @@ internal class Validation
         }
 
         return true;
+    }
 
+    internal static bool ValidStackId( int input )
+    {
+        //only 2 digits regex
+        var regex = new Regex(@"^[0-9]{1,2,3}$");
 
+        if ( regex.IsMatch( input.ToString() ) == false )
+        {
+            AnsiConsole.MarkupLine( "[red]Please enter a valid number.[/]" );
+            return false;
+        }
+
+        return true;
     }
 }

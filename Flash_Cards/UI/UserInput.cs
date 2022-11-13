@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Flash_Cards.Data;
+using Models;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -68,4 +69,17 @@ internal static class UserInput
     }
     }
 
+    internal static int GetStackToDelete()
+    {
+        var rule = new Rule("[bold Red]Delete a Stack");
+        var input = AnsiConsole.Ask<int>("Please enter an Id of the stack you would like to delete: ");
+        while ( !Validation.ValidStackId( input) )
+        {
+            input = AnsiConsole.Ask<int>( "Please Try again: " );
+        }
+
+        return input;
+
+
+    }
 }
