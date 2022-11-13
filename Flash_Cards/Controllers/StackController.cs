@@ -1,5 +1,6 @@
 ﻿using Flash_Cards.Data;
 using Flash_Cards.UI;
+using Flash_Cards.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,11 @@ internal class StackController
                 var ReturnedStack = UserInput.GetNewStackInput();
                 db.AddStack( ReturnedStack );
                 break;
-                
+            case "view all stacks":
+                var stacks = db.GetAllStacks();
+                UserView.DisplayStacks( stacks );
+                break;
+
         }
     }
 }

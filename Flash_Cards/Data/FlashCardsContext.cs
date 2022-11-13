@@ -75,4 +75,25 @@ internal class FlashCardContext
         command.ExecuteNonQuery();
     }
 
+    //view stacks
+    public List<Stack> GetAllStacks()
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"SELECT * FROM Stacks";
+        var reader = command.ExecuteReader();
+        var stacks = new List<Stack>();
+        while ( reader.Read() )
+        {
+            var stack = new Stack
+            {
+                Id = (int)reader["Id"],
+                Name = (string)reader["Name"]
+            };
+            stacks.Add( stack );
+        }
+        return stacks;
+    }
+
 }
