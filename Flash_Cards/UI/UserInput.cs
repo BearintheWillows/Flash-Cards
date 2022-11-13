@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using Models;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,23 @@ internal static class UserInput
                 }));
             return menuChoice;
         }
+    }
+
+    public static Stack GetNewStackInput()
+    {
+        {
+        var rule = new Rule("[bold blue]Create a new stack[/]");
+        AnsiConsole.Write( rule );
+
+            string input = AnsiConsole.Ask<string>("Please enter a name for your new stack:");
+            while (!Validation.ValidStackName( input ) )
+            {
+                input = AnsiConsole.Ask<string>( "Please Try again: " );
+            }
+
+            var newStack = new Stack { Name = input };
+            return newStack;
+    }
     }
 
 }

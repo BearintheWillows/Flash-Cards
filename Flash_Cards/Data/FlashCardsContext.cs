@@ -1,8 +1,10 @@
-﻿using Serilog;
+﻿using Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -60,8 +62,17 @@ internal class FlashCardContext
             Log.Warning( "Table Not created successfully" );
             Log.Error( e.Message);
         }
-        
+     }
 
+    public void AddStack( Stack stack )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"INSERT INTO Stacks (Name)
+                                    VALUES (@name)";
+        command.Parameters.AddWithValue( "@name", stack.Name );
+        command.ExecuteNonQuery();
     }
 
 }
