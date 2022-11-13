@@ -1,4 +1,6 @@
-﻿using Flash_Cards.Data;
+﻿using Flash_Cards.Controllers;
+using Flash_Cards.Data;
+using Flash_Cards.UI;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
@@ -18,5 +20,8 @@ var config = new ConfigurationBuilder()
 var connectionString = config.GetConnectionString("DefaultConnection");
 
 var db = new FlashCardContext(connectionString);
+var stacks = new StackController();
 
 db.CreateTables();
+
+stacks.GetMenuChoice();

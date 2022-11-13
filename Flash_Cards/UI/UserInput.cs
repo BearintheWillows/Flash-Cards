@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace Flash_Cards.UI;
 internal static class UserInput
 {
-    public static string ShowStackMenu()
+    public static string GetStackMenuInput()
     {
         var rule = new Rule("[bold blue]Main Menu[/]");
         AnsiConsole.Write( rule );
 
-        var menu = AnsiConsole.Prompt(
+        var menuChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Please select an option:")
                 .PageSize(5)
@@ -24,7 +24,30 @@ internal static class UserInput
                     "Delete a stack",
                     "Exit"
                 }));
-        return menu;
+        return menuChoice;
+    }
+
+    public static string GetCardMenuInput()
+    {
+        {
+            var rule = new Rule("[bold blue]Flash Card Menu[/]");
+            AnsiConsole.Write( rule );
+
+            var menuChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Please select an option:")
+                .PageSize(10)
+                .AddChoices(new[]
+                {
+                    "Create a new card",
+                    "Select a card",
+                    "Update a card",
+                    "View all cards",
+                    "Delete a card",
+                    "Go to Stack Menu",
+                }));
+            return menuChoice;
+        }
     }
 
 }
