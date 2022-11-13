@@ -18,3 +18,5 @@ var config = new ConfigurationBuilder()
 var connectionString = config.GetConnectionString("DefaultConnection");
 
 var db = new FlashCardContext(connectionString);
+
+db.CreateTables();
