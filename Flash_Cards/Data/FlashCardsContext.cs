@@ -23,14 +23,15 @@ internal class FlashCardContext
     {
         {
             using var connection = new SqlConnection(_connectionString);
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = @"CREATE TABLE Stacks(
+            var command = connection.CreateCommand();
+            command.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Stacks' AND xtype='U')
+                            CREATE TABLE Stacks(
                             Id INT IDENTITY PRIMARY KEY,
                             Name VARCHAR(255) NOT NULL,
                             CardId INT FOREIGN KEY REFERENCES FlashCards(Id)
                             )";
             connection.Open();
-            cmd.ExecuteNonQuery();
+            command.ExecuteNonQuery();
         }
     }
 
@@ -40,7 +41,9 @@ internal class FlashCardContext
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
         connection.Open();
-        command.CommandText = @"CREATE TABLE FlashCards
+        command.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE
+           name='FlashCards' AND xtype='U')
+                                CREATE TABLE FlashCards
                                 (Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                                 Question VARCHAR(255) NOT NULL,
                                 Answer VARCHAR(255) NOT NULL,
