@@ -20,11 +20,11 @@ internal class FlashCardContext
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
         command.CommandText = @"CREATE TABLE FlashCards (
-                                Id INT IDENTITY(1,1) PRIMARY KEY,
-                                Question VARCHAR(255),
-                                Answer VARCHAR(255),
-                                Category VARCHAR(255),
-                                Difficulty INT)";
+                                Id INT NOT NULL, PRIMARY KEY, AUTO INCREMENT
+                                Question TEXT,
+                                Answer TEXT,
+                                StackId int FOREIGN KEY REFERENCES Stack(Id)
+                                )";
         connection.Open();
 
         try
