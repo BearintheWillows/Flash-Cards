@@ -82,4 +82,19 @@ internal static class UserInput
 
 
     }
+
+    internal static bool ConfirmChoice()
+    {
+        if ( AnsiConsole.Confirm( "Are you sure you want to delete?" ) )
+        {
+            AnsiConsole.MarkupLine( "[bold green]Record Deleted[/]" );
+            return true;
+
+        }
+        else
+        {
+            return false;
+
+        }
+    }
 }

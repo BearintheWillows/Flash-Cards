@@ -114,11 +114,23 @@ internal class FlashCardContext
                 Id = (int)reader["Id"],
                 Name = (string)reader["Name"]
             };
+            Log.Information( $"Stack {stack.Name} found" );
             return stack;
         }
         else
         {
             return null;
         }
+    }
+
+    //delete stack
+    public void DeleteStack( int id )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"DELETE FROM Stacks WHERE Id = @id";
+        command.Parameters.AddWithValue( "@id", id );
+        command.ExecuteNonQuery();
     }
 }

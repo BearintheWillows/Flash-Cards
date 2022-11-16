@@ -27,10 +27,23 @@ internal class StackController
                 break;
             case "delete a stack":
                 var stack = UserInput.GetStackToDelete();
-                if ( GetStackById( stack, db ) != null )
+                Stack stackChoice = GetStackById( stack, db );
+                UserView.DisplayStackToDelete( stackChoice );
+                if (UserInput.ConfirmChoice())
                 {
-                    UserView.DisplayStack( stack );
+                    db.DeleteStack( stackChoice.Id );
+                    var rule = new Rule($"[bold red] Record Deleted[/]");
+                    AnsiConsole.Write( rule );
+               
+                    GetMenuChoice(db);
                 }
+                else
+                {
+                    var rule = new Rule("[bold red] Record NOT Deleted[/]");
+                    AnsiConsole.Write( rule );
+                    GetMenuChoice( db );
+                }
+               
                 
                
 
@@ -42,8 +55,8 @@ internal class StackController
     
     public static Stack GetStackById( int id, FlashCardContext db)
     {
-        var stack;
-        if ( stack = db.GetStackById( id ) )
+        Stack stack = db.GetStackById( id );
+        if ( stack != null )
         {
             return stack;
         }

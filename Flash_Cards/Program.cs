@@ -24,4 +24,4 @@ var stacks = new StackController();
 
 db.CreateTables();
 
-stacks.GetMenuChoice();
+stacks.GetMenuChoice(db);

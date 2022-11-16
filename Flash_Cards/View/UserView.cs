@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Flash_Cards.UI;
+using Models;
 using Spectre.Console;
 
 namespace Flash_Cards.View;
@@ -39,4 +40,18 @@ internal static class UserView
             Console.ReadKey();
             Console.Clear();
 }
+
+    public static void DisplayStackToDelete( Stack stack )
+    {
+        var table = new Table().Expand();
+        table.AddColumn( "Id" );
+        table.AddColumn( "Name" );
+        table.AddColumn( "Card Count" );
+        table.AddRow( stack.Id.ToString(),
+                      stack.Name);
+        AnsiConsole.Write( table );
+        var rule = new Rule("[bold red]DELETE RECORD?[/]");
+        AnsiConsole.Write( rule );
+       
+    }
 }

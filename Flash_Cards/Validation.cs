@@ -37,8 +37,9 @@ internal class Validation
 
     internal static bool ValidStackId( int input )
     {
-        //only 2 digits regex
-        var regex = new Regex(@"^[0-9]{1,2,3}$");
+        //1, 2 or 3 digits regex
+
+        var regex = new Regex(@"^\d{1,3}$");
 
         if ( regex.IsMatch( input.ToString() ) == false )
         {
