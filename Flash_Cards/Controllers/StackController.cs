@@ -20,10 +20,12 @@ internal class StackController
             case "create a new stack":
                 var ReturnedStack = UserInput.GetNewStackInput();
                 db.AddStack( ReturnedStack );
+                GetMenuChoice( db );
                 break;
             case "view all stacks":
                 var stacks = db.GetAllStacks();
                 UserView.DisplayStacks( stacks );
+                GetMenuChoice( db );
                 break;
             case "delete a stack":
                 var stack = UserInput.GetStackToDelete();

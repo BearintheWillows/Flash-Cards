@@ -17,20 +17,20 @@ internal class FlashCardContext
         _connectionString = connectionString;
     }
     public void CreateTables()
-    {
-        CreateFlashCardTable();
+    {   
         CreateStacksTable();
+        CreateFlashCardTable();
+        
     }
     private void CreateStacksTable()
     {
         {
             using var connection = new SqlConnection(_connectionString);
             var command = connection.CreateCommand();
-            command.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Stacks' AND xtype='U')
-                            CREATE TABLE Stacks(
-                            Id INT IDENTITY PRIMARY KEY,
+            command.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='stacks' AND xtype='U')
+                            CREATE TABLE stacks(
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
                             Name VARCHAR(255) NOT NULL,
-                            CardId INT FOREIGN KEY REFERENCES FlashCards(Id)
                             )";
             connection.Open();
             command.ExecuteNonQuery();
@@ -44,17 +44,19 @@ internal class FlashCardContext
         using var command = connection.CreateCommand();
         connection.Open();
         command.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE
-           name='FlashCards' AND xtype='U')
-                                CREATE TABLE FlashCards
+           name='flashcards' AND xtype='U')
+                                CREATE TABLE flashcards
                                 (Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                                 Question VARCHAR(255) NOT NULL,
                                 Answer VARCHAR(255) NOT NULL,
+                                StackId int FOREIGN KEY REFERENCES stacks(Id)
                                 )";
+                               
 
         try
         {
             command.ExecuteNonQuery();
-            Log.Information( "Table Created Successfully" );
+            Log.Information( "Flashcard table Created Successfully" );
         }
         catch ( Exception e)
         {
@@ -133,4 +135,20 @@ internal class FlashCardContext
         command.Parameters.AddWithValue( "@id", id );
         command.ExecuteNonQuery();
     }
+
+    //create a card and add to a stack
+    public void AddCard( Card card)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"INSERT INTO flashcards (Question, Answer, StackId)
+                                    VALUES (@question, @answer, @stackId)";
+        command.Parameters.AddWithValue( "@question", card.Question );
+        command.Parameters.AddWithValue( "@answer", card.Answer );
+        command.Parameters.AddWithValue( "@stackId", card.StackId );
+        command.ExecuteNonQuery();
+    }
+
+    
 }

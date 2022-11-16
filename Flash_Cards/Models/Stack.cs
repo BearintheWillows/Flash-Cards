@@ -8,7 +8,8 @@ namespace Models
     public class Stack
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<Card> Cards { get; set; }
+        public string Name { get; set; } = string.Empty;
+        
+    
     }
 }
