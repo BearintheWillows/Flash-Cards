@@ -1,11 +1,5 @@
-﻿using Flash_Cards.Data;
-using Models;
+﻿using Models;
 using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flash_Cards.UI;
 internal static class UserInput
@@ -52,28 +46,49 @@ internal static class UserInput
         }
     }
 
+    public static string MainMenuInput()
+    {
+        var rule = new Rule( "[bold green]Welcome to Flash Cards![/]" );
+        AnsiConsole.Write( rule );
+        var rule2 = new Rule( "[bold green]Please select an option from the menu below:[/]" );
+        AnsiConsole.Write( rule2 );
+
+        var menuChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Please select an option:")
+                .PageSize(5)
+                .AddChoices(new[]
+                {
+                    "Play a Stack!",
+                    "Manage Stacks!",
+                    "View Sessions",
+                    "Exit"
+                }));
+        return menuChoice;
+    }
+
     public static Stack GetNewStackInput()
     {
         {
-        var rule = new Rule("[bold blue]Create a new stack[/]");
-        AnsiConsole.Write( rule );
+            var rule = new Rule("[bold blue]Create a new stack[/]");
+            AnsiConsole.Write( rule );
 
             string input = AnsiConsole.Ask<string>("Please enter a name for your new stack:");
-            while (!Validation.ValidStackName( input ) )
+            while ( !Validation.ValidStackName( input ) )
             {
                 input = AnsiConsole.Ask<string>( "Please Try again: " );
             }
 
             var newStack = new Stack { Name = input };
             return newStack;
-    }
+        }
     }
 
     internal static int GetStackToDelete()
     {
         var rule = new Rule("[bold Red]Delete a Stack");
         var input = AnsiConsole.Ask<int>("Please enter an Id of the stack you would like to delete: ");
-        while ( !Validation.ValidStackId( input) )
+        while ( !Validation.ValidStackId( input ) )
         {
             input = AnsiConsole.Ask<int>( "Please Try again: " );
         }
