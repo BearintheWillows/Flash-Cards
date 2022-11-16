@@ -11,24 +11,24 @@ internal class MenuController
 
     public void ManageStackMenu( FlashCardContext db )
     {
-        var choice = UserInput.GetStackMenuInput();
+        var choice = MenuInputs.GetStackMenuInput();
         switch ( choice.ToLower() )
         {
             case "create a new stack":
-                var ReturnedStack = UserInput.GetNewStackInput();
+                var ReturnedStack = MenuInputs.GetNewStackInput();
                 db.AddStack( ReturnedStack );
                 ManageStackMenu( db );
                 break;
             case "view all stacks":
                 var stacks = db.GetAllStacks();
-                UserView.DisplayStacks( stacks );
+                DataViews.ViewAllStacks( stacks );
                 ManageStackMenu( db );
                 break;
             case "delete a stack":
-                var stack = UserInput.GetStackToDelete();
+                var stack = MenuInputs.GetStackToDelete();
                 Stack stackChoice = StackController.GetStackById( stack, db );
-                UserView.DisplayStackToDelete( stackChoice );
-                if ( UserInput.ConfirmChoice() )
+                DataViews.ViewStackToDelete( stackChoice );
+                if ( MenuInputs.ConfirmChoice() )
                 {
                     db.DeleteStack( stackChoice.Id );
                     var rule = new Rule($"[bold red] Record Deleted[/]");
@@ -43,6 +43,9 @@ internal class MenuController
                     ManageStackMenu( db );
                 }
                 break;
+            case "Back to Main Menu":
+                break;
+                  
         }
 
     }

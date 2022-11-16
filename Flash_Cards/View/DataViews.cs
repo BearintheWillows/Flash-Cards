@@ -1,10 +1,19 @@
 ﻿using Models;
 using Spectre.Console;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Flash_Cards.View;
-internal static class UserView
+internal class DataViews
 {
-    public static void DisplayStacks( List<Stack> stack )
+    /// <summary>
+    /// Displays a table of all stacks within a collection
+    /// </summary>
+    /// <param name="stack"></param>
+    public static void ViewAllStacks( List<Stack> stack )
     {
         var table = new Table().Expand();
 
@@ -39,8 +48,12 @@ internal static class UserView
         Console.ReadKey();
         Console.Clear();
     }
-
-    public static void DisplayStackToDelete( Stack stack )
+    
+    /// <summary>
+    /// Displays a singular stack and shows confirmation whether to delete stack
+    /// </summary>
+    /// <param name="stack"></param>
+    public static void ViewStackToDelete( Stack stack )
     {
         var table = new Table().Expand();
         table.AddColumn( "Id" );
@@ -53,6 +66,4 @@ internal static class UserView
         AnsiConsole.Write( rule );
 
     }
-
-
 }

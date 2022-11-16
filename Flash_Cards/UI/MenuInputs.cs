@@ -2,7 +2,7 @@
 using Spectre.Console;
 
 namespace Flash_Cards.UI;
-internal static class UserInput
+internal static class MenuInputs
 {
     public static string GetStackMenuInput()
     {
@@ -48,14 +48,10 @@ internal static class UserInput
 
     public static string MainMenuInput()
     {
-        var rule = new Rule( "[bold green]Welcome to Flash Cards![/]" );
-        AnsiConsole.Write( rule );
-        var rule2 = new Rule( "[bold green]Please select an option from the menu below:[/]" );
-        AnsiConsole.Write( rule2 );
 
         var menuChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("Please select an option:")
+                .Title("   Main Menu")
                 .PageSize(5)
                 .AddChoices(new[]
                 {
