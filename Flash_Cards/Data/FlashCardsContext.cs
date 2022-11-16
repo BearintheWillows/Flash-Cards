@@ -1,12 +1,6 @@
 ﻿using Models;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Flash_Cards.Data;
 internal class FlashCardContext
@@ -17,10 +11,10 @@ internal class FlashCardContext
         _connectionString = connectionString;
     }
     public void CreateTables()
-    {   
+    {
         CreateStacksTable();
         CreateFlashCardTable();
-        
+
     }
     private void CreateStacksTable()
     {
@@ -51,20 +45,20 @@ internal class FlashCardContext
                                 Answer VARCHAR(255) NOT NULL,
                                 StackId int FOREIGN KEY REFERENCES stacks(Id)
                                 )";
-                               
+
 
         try
         {
             command.ExecuteNonQuery();
             Log.Information( "Flashcard table Created Successfully" );
         }
-        catch ( Exception e)
+        catch ( Exception e )
         {
 
             Log.Warning( "Table Not created successfully" );
-            Log.Error( e.Message);
+            Log.Error( e.Message );
         }
-     }
+    }
 
     public void AddStack( Stack stack )
     {
@@ -137,7 +131,7 @@ internal class FlashCardContext
     }
 
     //create a card and add to a stack
-    public void AddCard( Card card)
+    public void AddCard( Card card )
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
@@ -150,5 +144,5 @@ internal class FlashCardContext
         command.ExecuteNonQuery();
     }
 
-    
+
 }

@@ -1,45 +1,44 @@
-﻿using Flash_Cards.UI;
-using Models;
+﻿using Models;
 using Spectre.Console;
 
 namespace Flash_Cards.View;
 internal static class UserView
 {
-    public static void DisplayStacks(List<Stack> stack )
+    public static void DisplayStacks( List<Stack> stack )
     {
         var table = new Table().Expand();
-     
-            var rowNum = 1;
-            table.AddColumn( "Id" );
-            table.AddColumn( "Name" );
-            table.AddColumn( "Card Count" );
-           
 
-            foreach ( var item in stack )
+        var rowNum = 1;
+        table.AddColumn( "Id" );
+        table.AddColumn( "Name" );
+        table.AddColumn( "Card Count" );
+
+
+        foreach ( var item in stack )
+        {
+            if ( rowNum % 2 == 0 )
             {
-                if ( rowNum % 2 == 0 )
-                {
                 table.AddRow( $"[black on grey82]{item.Id}[/]",
                              $"[black on grey82]{item.Name}[/]" );
-                             
-                }
-                else
-                {
+
+            }
+            else
+            {
                 table.AddRow( item.Id.ToString(),
-                item.Name);
-                }
+                item.Name );
+            }
 
 
-            }       
-                rowNum++;
-            
+        }
+        rowNum++;
 
-            AnsiConsole.Write(table);
-            var rule = new Rule("[bold green]Press any key to return to the menu[/]");
-            AnsiConsole.Write(rule);
-            Console.ReadKey();
-            Console.Clear();
-}
+
+        AnsiConsole.Write( table );
+        var rule = new Rule("[bold green]Press any key to return to the menu[/]");
+        AnsiConsole.Write( rule );
+        Console.ReadKey();
+        Console.Clear();
+    }
 
     public static void DisplayStackToDelete( Stack stack )
     {
@@ -48,10 +47,12 @@ internal static class UserView
         table.AddColumn( "Name" );
         table.AddColumn( "Card Count" );
         table.AddRow( stack.Id.ToString(),
-                      stack.Name);
+                      stack.Name );
         AnsiConsole.Write( table );
         var rule = new Rule("[bold red]DELETE RECORD?[/]");
         AnsiConsole.Write( rule );
-       
+
     }
+
+
 }
