@@ -6,10 +6,20 @@ using Spectre.Console;
 
 namespace Flash_Cards.Controllers;
 internal class MenuController
-{
+{   
+    private readonly FlashCardContext db;
+    private readonly StackController stackController;
+   
 
+    public MenuController( FlashCardContext db, StackController stackController )
+    {
+        this.stackController = stackController;
+        this.db = db;
+     
+    }
 
-    public void ManageStackMenu( FlashCardContext db )
+    
+    public void ManageStackMenu()
     {
         var choice = MenuInputs.GetStackMenuInput();
         switch ( choice.ToLower() )
@@ -17,16 +27,16 @@ internal class MenuController
             case "create a new stack":
                 var ReturnedStack = MenuInputs.GetNewStackInput();
                 db.AddStack( ReturnedStack );
-                ManageStackMenu( db );
+                ManageStackMenu();
                 break;
             case "view all stacks":
                 var stacks = db.GetAllStacks();
                 DataViews.ViewAllStacks( stacks );
-                ManageStackMenu( db );
+                ManageStackMenu();
                 break;
             case "delete a stack":
                 var stack = MenuInputs.GetStackToDelete();
-                Stack stackChoice = StackController.GetStackById( stack, db );
+                Stack stackChoice = stackController.GetStackById( stack);
                 DataViews.ViewStackToDelete( stackChoice );
                 if ( MenuInputs.ConfirmChoice() )
                 {
@@ -34,19 +44,49 @@ internal class MenuController
                     var rule = new Rule($"[bold red] Record Deleted[/]");
                     AnsiConsole.Write( rule );
 
-                    ManageStackMenu( db );
+                    ManageStackMenu();
                 }
                 else
                 {
                     var rule = new Rule("[bold red] Record NOT Deleted[/]");
                     AnsiConsole.Write( rule );
-                    ManageStackMenu( db );
+                    ManageStackMenu();
                 }
                 break;
             case "Back to Main Menu":
+                MainMenu();
                 break;
                   
         }
 
+    }
+
+    public bool MainMenu()
+    {
+        Console.Clear();
+        bool exitProgram = false;
+        MenuViews.MainMenu();
+        string choice = MenuInputs.MainMenuInput();
+
+        
+
+        switch ( choice )
+        {
+            case "Play a Stack!":
+                //TODO
+
+                
+            case "Manage Stacks!":
+                Console.Clear();
+                ManageStackMenu();
+                break;
+            case "View Sessions":
+                //TODO
+              
+            case "Exit":
+                exitProgram = true;
+                break;
+        }
+        return exitProgram;
     }
 }

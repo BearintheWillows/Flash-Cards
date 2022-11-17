@@ -5,9 +5,15 @@ using Spectre.Console;
 namespace Flash_Cards.Controllers;
 internal class StackController
 {
+    public StackController( FlashCardContext db )
+    {
+        this.db = db;
+    }
+
+    private readonly FlashCardContext db;
 
 
-    public static Stack GetStackById( int id, FlashCardContext db )
+    public Stack GetStackById( int id)
     {
         Stack stack = db.GetStackById( id );
         if ( stack != null )

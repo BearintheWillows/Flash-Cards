@@ -6,7 +6,8 @@ internal static class MenuInputs
 {
     public static string GetStackMenuInput()
     {
-        var rule = new Rule("[bold blue]Main Menu[/]");
+
+        var rule = new Rule("[bold blue]Mange Stacks Menu[/]");
         AnsiConsole.Write( rule );
 
         var menuChoice = AnsiConsole.Prompt(
@@ -18,8 +19,9 @@ internal static class MenuInputs
                     "Create a new stack",
                     "View all stacks",
                     "Delete a stack",
-                    "Exit"
+                    "Back to Main Menu"
                 }));
+    
         return menuChoice;
     }
 
@@ -40,7 +42,7 @@ internal static class MenuInputs
                     "Update a card",
                     "View all cards",
                     "Delete a card",
-                    "Go to Stack Menu",
+                    "Back to Main Menu",
                 }));
             return menuChoice;
         }

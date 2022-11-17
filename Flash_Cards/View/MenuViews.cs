@@ -14,10 +14,5 @@ internal static class MenuViews
         var rule2 = new Rule( "[bold green]Please select an option from the menu below:[/]" );
         AnsiConsole.Write( rule2 );
 
-        //Displays the input for the main menu
-        MenuInputs.MainMenuInput();
-
-        AnsiConsole.Clear();
-        
     }
 }
