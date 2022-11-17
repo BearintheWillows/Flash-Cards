@@ -18,6 +18,7 @@ internal static class MenuInputs
                 {
                     "Create a new stack",
                     "View all stacks",
+                    "Inspect a Stack",
                     "Delete a stack",
                     "Back to Main Menu"
                 }));
@@ -109,5 +110,34 @@ internal static class MenuInputs
             return false;
 
         }
+    }
+
+    internal static string GetInspectStackMenuInput()
+    {
+
+        var menuChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Please select an option:")
+                .PageSize(10)
+                .AddChoices(new[]
+                {
+                    "Add a new card",
+                    "Select a card",
+                    "Update a card",
+                    "View all cards",
+                    "Delete a card",
+                    "Back to Main Menu",
+                }));
+
+        return menuChoice;
+    }
+
+    internal static Card GetNewCardInput()
+    {
+        AnsiConsole.MarkupLine( "[bold blue]Create a new card[/]" );
+        string question = AnsiConsole.Ask<string>( "Please enter a question for your new card:" );
+        string answer = AnsiConsole.Ask<string>( "Please enter an answer for your new card:" );
+        var newCard = new Card { Question = question, Answer = answer };
+        return newCard;
     }
 }

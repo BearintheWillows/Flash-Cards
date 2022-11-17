@@ -27,4 +27,21 @@ internal class StackController
         }
 
     }
+
+    //add card  
+    public void AddCardToStack( int id, Card card)
+    {
+        Stack stack = db.GetStackById( id );
+        
+        if ( stack != null )
+        {
+            card.StackId = id;
+            db.AddCard( card );
+          
+        }
+        else
+        {
+            AnsiConsole.MarkupLine( "[red]Stack not found.[/]" );
+        }
+    }
 }

@@ -34,10 +34,18 @@ internal class MenuController
                 DataViews.ViewAllStacks( stacks );
                 ManageStackMenu();
                 break;
+            case "inspect a stack":
+                int id = DataInput.IdInput();
+                Stack stack = stackController.GetStackById(id);
+               
+                DataViews.ViewStackById( stack );
+                InspectStackMenu(id);
+
+                break;
             case "delete a stack":
-                var stack = MenuInputs.GetStackToDelete();
-                Stack stackChoice = stackController.GetStackById( stack);
-                DataViews.ViewStackToDelete( stackChoice );
+                int stackId = MenuInputs.GetStackToDelete();
+                Stack stackChoice = stackController.GetStackById( stackId);
+                DataViews.ViewStackById( stackChoice );
                 if ( MenuInputs.ConfirmChoice() )
                 {
                     db.DeleteStack( stackChoice.Id );
@@ -59,6 +67,20 @@ internal class MenuController
                   
         }
 
+    }
+
+    private void InspectStackMenu(int id)
+    {
+        Console.Clear();
+        string choice = MenuInputs.GetInspectStackMenuInput();
+
+        switch ( choice.ToLower() )
+        {
+            case "add a new card":
+                var card = MenuInputs.GetNewCardInput();
+                stackController.AddCardToStack( id, card );
+                break;
+        }
     }
 
     public bool MainMenu()

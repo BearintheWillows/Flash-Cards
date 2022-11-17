@@ -15,4 +15,6 @@ internal static class MenuViews
         AnsiConsole.Write( rule2 );
 
     }
+
+    
 }

@@ -53,8 +53,11 @@ internal class DataViews
     /// Displays a singular stack and shows confirmation whether to delete stack
     /// </summary>
     /// <param name="stack"></param>
-    public static void ViewStackToDelete( Stack stack )
+    public static void ViewStackById( Stack stack )
     {
+        Console.Clear();
+        Rule rule = new Rule( $"[bold green]Stack Name: {stack.Name}[/]" );
+        AnsiConsole.Write( rule );
         var table = new Table().Expand();
         table.AddColumn( "Id" );
         table.AddColumn( "Name" );
@@ -62,8 +65,8 @@ internal class DataViews
         table.AddRow( stack.Id.ToString(),
                       stack.Name );
         AnsiConsole.Write( table );
-        var rule = new Rule("[bold red]DELETE RECORD?[/]");
-        AnsiConsole.Write( rule );
+
+     
 
     }
 }
