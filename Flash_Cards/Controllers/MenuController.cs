@@ -72,9 +72,9 @@ internal class MenuController
 
     private void InspectStackMenu(int id)
     {
-        Console.Clear();
+        
         string choice = MenuInputs.GetInspectStackMenuInput();
-
+        Console.Clear();
         switch ( choice.ToLower() )
         {
             case "add a new card":
