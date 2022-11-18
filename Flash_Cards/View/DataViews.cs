@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Flash_Cards.Models;
+using Models;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ internal class DataViews
     /// Displays a table of all stacks within a collection
     /// </summary>
     /// <param name="stack"></param>
-    public static void ViewAllStacks( List<Stack> stack )
+    public static void ViewAllStacks( List<StackDto> stack )
     {
         var table = new Table().Expand();
 
@@ -28,13 +29,14 @@ internal class DataViews
             if ( rowNum % 2 == 0 )
             {
                 table.AddRow( $"[black on grey82]{item.Id}[/]",
-                             $"[black on grey82]{item.Name}[/]" );
+                             $"[black on grey82]{item.Name}[/]" ,
+                             $"[black on grey82]{item.Count}[/]");
 
             }
             else
             {
                 table.AddRow( item.Id.ToString(),
-                item.Name );
+                item.Name, item.Count.ToString() );
             }
 
 
@@ -53,7 +55,7 @@ internal class DataViews
     /// Displays a singular stack and shows confirmation whether to delete stack
     /// </summary>
     /// <param name="stack"></param>
-    public static void ViewStackById( Stack stack )
+    public static void ViewStackById( StackDto stack )
     {
         Console.Clear();
         Rule rule = new Rule( $"[bold green]Stack Name: {stack.Name}[/]" );
@@ -63,10 +65,10 @@ internal class DataViews
         table.AddColumn( "Name" );
         table.AddColumn( "Card Count" );
         table.AddRow( stack.Id.ToString(),
-                      stack.Name );
+                      stack.Name, stack.Count.ToString() );
         AnsiConsole.Write( table );
 
      
-
+        
     }
 }

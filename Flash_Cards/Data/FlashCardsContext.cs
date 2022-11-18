@@ -1,6 +1,8 @@
-﻿using Models;
+﻿using Flash_Cards.Models;
+using Models;
 using Serilog;
 using System.Data.SqlClient;
+using System.Reflection.Metadata;
 
 namespace Flash_Cards.Data;
 internal class FlashCardContext
@@ -72,20 +74,21 @@ internal class FlashCardContext
     }
 
     //view stacks
-    public List<Stack> GetAllStacks()
+    public List<StackDto> GetAllStacks()
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
         connection.Open();
         command.CommandText = @"SELECT * FROM Stacks";
         var reader = command.ExecuteReader();
-        var stacks = new List<Stack>();
+        var stacks = new List<StackDto>();
         while ( reader.Read() )
         {
-            var stack = new Stack
+            StackDto stack = new StackDto
             {
                 Id = (int)reader["Id"],
-                Name = (string)reader["Name"]
+                Name = (string)reader["Name"],
+                Count = GetCardCountByStackId( (int)reader["Id"] )
             };
             stacks.Add( stack );
         }
@@ -142,6 +145,23 @@ internal class FlashCardContext
         command.Parameters.AddWithValue( "@answer", card.Answer );
         command.Parameters.AddWithValue( "@stackId", card.StackId );
         command.ExecuteNonQuery();
+    }
+
+    public int GetCardCountByStackId( int id )
+    {
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = connection.CreateCommand();
+            connection.Open();
+            command.CommandText = @"SELECT COUNT(*) FROM flashcards WHERE StackId = @stackId";
+            command.Parameters.AddWithValue( "@stackId", id );
+            var reader = command.ExecuteReader();
+            reader.Read();
+            var count = (int)reader[0];
+            Log.Information( $"There are {count} cards in the database" );
+            return count;
+            
+        }
     }
 
 

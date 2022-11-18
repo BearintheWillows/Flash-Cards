@@ -1,4 +1,5 @@
 ﻿using Flash_Cards.Data;
+using Flash_Cards.Models;
 using Flash_Cards.UI;
 using Flash_Cards.View;
 using Models;
@@ -30,13 +31,13 @@ internal class MenuController
                 ManageStackMenu();
                 break;
             case "view all stacks":
-                var stacks = db.GetAllStacks();
+                List<StackDto> stacks = db.GetAllStacks();
                 DataViews.ViewAllStacks( stacks );
                 ManageStackMenu();
                 break;
             case "inspect a stack":
                 int id = DataInput.IdInput();
-                Stack stack = stackController.GetStackById(id);
+                StackDto stack = stackController.GetStackById(id);
                
                 DataViews.ViewStackById( stack );
                 InspectStackMenu(id);
@@ -44,7 +45,7 @@ internal class MenuController
                 break;
             case "delete a stack":
                 int stackId = MenuInputs.GetStackToDelete();
-                Stack stackChoice = stackController.GetStackById( stackId);
+                StackDto stackChoice = stackController.GetStackById( stackId);
                 DataViews.ViewStackById( stackChoice );
                 if ( MenuInputs.ConfirmChoice() )
                 {

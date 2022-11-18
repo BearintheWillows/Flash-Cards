@@ -1,4 +1,5 @@
 ﻿using Flash_Cards.Data;
+using Flash_Cards.Models;
 using Models;
 using Spectre.Console;
 
@@ -13,12 +14,18 @@ internal class StackController
     private readonly FlashCardContext db;
 
 
-    public Stack GetStackById( int id)
+    public StackDto GetStackById( int id)
     {
         Stack stack = db.GetStackById( id );
+        StackDto newStack = new StackDto
+        {
+            Id = stack.Id,
+            Name = stack.Name,
+            Count = db.GetCardCountByStackId( id )
+        };
         if ( stack != null )
         {
-            return stack;
+            return newStack;
         }
         else
         {
