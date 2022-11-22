@@ -123,12 +123,12 @@ internal class FlashCardContext
     }
 
     //delete stack
-    public void DeleteStack( int id )
+    public void DeleteStackAndCards( int id )
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
         connection.Open();
-        command.CommandText = @"DELETE FROM Stacks WHERE Id = @id";
+        command.CommandText = @"DELETE FROM Flashcards WHERE StackId = @id ; DELETE FROM Stacks WHERE Id = @id";
         command.Parameters.AddWithValue( "@id", id );
         command.ExecuteNonQuery();
     }
