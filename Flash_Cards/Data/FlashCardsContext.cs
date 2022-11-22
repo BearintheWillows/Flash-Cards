@@ -164,5 +164,52 @@ internal class FlashCardContext
         }
     }
 
+    internal Card? GetCardById( int cardId )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"SELECT * FROM flashcards WHERE Id = @id";
+        command.Parameters.AddWithValue( "@id", cardId );
+        var reader = command.ExecuteReader();
+        reader.Read();
+        if ( reader.HasRows )
+        {
+            var card = new Card
+            {
+                Id = (int)reader["Id"],
+                Question = (string)reader["Question"],
+                Answer = (string)reader["Answer"],
+                StackId = (int)reader["StackId"]
+            };
+            Log.Information( $"Card {card.Question} found" );
+            return card;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
+    internal List<CardDto> GetAllCardsByStackId( int id )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"SELECT * FROM flashcards WHERE StackId = @id";
+        command.Parameters.AddWithValue( "@id", id );
+        var reader = command.ExecuteReader();
+        var cards = new List<CardDto>();
+        while ( reader.Read() )
+        {
+            CardDto card = new CardDto
+            {
+                Id = (int)reader["Id"],
+                Question = (string)reader["Question"],
+                Answer = (string)reader["Answer"],
+            };
+            cards.Add( card );
+        }
+        return cards;
+    }
 }
