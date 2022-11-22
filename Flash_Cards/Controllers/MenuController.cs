@@ -72,7 +72,7 @@ internal class MenuController
 
     private void InspectStackMenu(int id)
     {
-        
+        int cardId = 0;
         string choice = MenuInputs.GetInspectStackMenuInput();
         Console.Clear();
         switch ( choice.ToLower() )
@@ -81,6 +81,12 @@ internal class MenuController
                 var card = MenuInputs.GetNewCardInput();
                 stackController.AddCardToStack( id, card );
                 break;
+            case "view all cards":
+                break;
+            case "select a card":
+                 cardId = MenuInputs.GetCardIdInput();
+                break;
+              
         }
     }
 

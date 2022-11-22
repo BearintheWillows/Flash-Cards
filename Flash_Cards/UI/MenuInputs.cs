@@ -123,9 +123,7 @@ internal static class MenuInputs
                 {
                     "Add a new card",
                     "Select a card",
-                    "Update a card",
                     "View all cards",
-                    "Delete a card",
                     "Back to Main Menu",
                 }));
 
@@ -139,5 +137,11 @@ internal static class MenuInputs
         string answer = AnsiConsole.Ask<string>( "Please enter an answer for your new card:" );
         var newCard = new Card { Question = question, Answer = answer };
         return newCard;
+    }
+
+    internal static int GetCardIdInput()
+    {
+        int cardId = AnsiConsole.Ask<int>( "[bold blue]Enter card Id: [/]" );
+        return cardId;
     }
 }
