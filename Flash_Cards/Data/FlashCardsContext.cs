@@ -164,7 +164,7 @@ internal class FlashCardContext
         }
     }
 
-    internal Card? GetCardById( int cardId )
+    internal CardDto? GetCardById( int cardId )
     {
         using var connection = new SqlConnection(_connectionString);
         using var command = connection.CreateCommand();
@@ -175,12 +175,11 @@ internal class FlashCardContext
         reader.Read();
         if ( reader.HasRows )
         {
-            var card = new Card
+            var card = new CardDto
             {
                 Id = (int)reader["Id"],
                 Question = (string)reader["Question"],
                 Answer = (string)reader["Answer"],
-                StackId = (int)reader["StackId"]
             };
             Log.Information( $"Card {card.Question} found" );
             return card;
