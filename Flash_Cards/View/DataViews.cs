@@ -14,34 +14,57 @@ internal class DataViews
     /// Displays a table of all stacks within a collection
     /// </summary>
     /// <param name="stack"></param>
-    public static void ViewAllStacks( List<StackDto> stack )
+    public static void ViewAll<T>( IEnumerable<T> obj )
     {
         var table = new Table().Expand();
-
         var rowNum = 1;
-        table.AddColumn( "Id" );
-        table.AddColumn( "Name" );
-        table.AddColumn( "Card Count" );
-
-
-        foreach ( var item in stack )
+        
+        if ( obj is IEnumerable<StackDto> stack )
         {
-            if ( rowNum % 2 == 0 )
+            table.AddColumn( "Id" );
+            table.AddColumn( "Name" );
+            table.AddColumn( "Card Count" );
+            
+
+            foreach ( var item in stack )
             {
-                table.AddRow( $"[black on grey82]{item.Id}[/]",
-                             $"[black on grey82]{item.Name}[/]" ,
-                             $"[black on grey82]{item.Count}[/]");
+                if ( rowNum % 2 == 0 )
+                {
+                    table.AddRow( $"[black on grey82]{item.Id}[/]",
+                                 $"[black on grey82]{item.Name}[/]",
+                                 $"[black on grey82]{item.Count}[/]" );
 
+                }
+                else
+                {
+                    table.AddRow( item.Id.ToString(),
+                    item.Name, item.Count.ToString() );
+                }
+                rowNum++;
             }
-            else
+
+        } else if (obj is IEnumerable<CardDto> card)
+        {
+            table.AddColumn( "Id" );
+            table.AddColumn( "Front" );
+            table.AddColumn( "Back" );
+            
+            foreach ( var item in card )
             {
-                table.AddRow( item.Id.ToString(),
-                item.Name, item.Count.ToString() );
+                if ( rowNum % 2 == 0 )
+                {
+                    table.AddRow( $"[black on grey82]{rowNum}[/]",
+                                 $"[black on grey82]{item.Question}[/]",
+                                 $"[black on grey82]{item.Answer}[/]" );
+
+                }
+                else
+                {
+                    table.AddRow( rowNum.ToString(), item.Question, item.Answer );
+                }
+                rowNum++;
             }
-
-
         }
-        rowNum++;
 
 
         AnsiConsole.Write( table );
@@ -55,20 +78,40 @@ internal class DataViews
     /// Displays a singular stack and shows confirmation whether to delete stack
     /// </summary>
     /// <param name="stack"></param>
-    public static void ViewStackById( StackDto stack )
+    public static void ViewById<T>( T obj)
     {
         Console.Clear();
-        Rule rule = new Rule( $"[bold green]Stack Name: {stack.Name}[/]" );
-        AnsiConsole.Write( rule );
-        var table = new Table().Expand();
-        table.AddColumn( "Id" );
-        table.AddColumn( "Name" );
-        table.AddColumn( "Card Count" );
-        table.AddRow( stack.Id.ToString(),
-                      stack.Name, stack.Count.ToString() );
-        AnsiConsole.Write( table );
+        if ( obj is StackDto stack )
+        {
+            var table = new Table().Expand();
+            table.AddColumn( "Id" );
+            table.AddColumn( "Name" );
+            table.AddColumn( "Card Count" );
+            table.AddRow( stack.Id.ToString(), stack.Name, stack.Count.ToString() );
+            AnsiConsole.Write( table );
+        }
+        else if ( obj is CardDto card )
+        {
+            var table = new Table().Expand();
+            table.AddColumn( "Id" );
+            table.AddColumn( "Front" );
+            table.AddColumn( "Back" );
+            table.AddRow( card.Id.ToString(), card.Question, card.Answer );
+            AnsiConsole.Write( table );
+        }
+    }
 
-     
-        
+    internal static void ViewAllCards( List<CardDto> cards )
+    {
+        foreach ( var item in cards )
+        {
+            Console.WriteLine( $"Id: {item.Id} | Question: {item.Question} | Answer: {item.Answer}" );
+        }
+        Console.ReadKey();
+    }
+
+    internal static void ViewCardById( Card cardChoice )
+    {
+        //TODO - Implement ViewCardById
     }
 }
