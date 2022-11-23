@@ -19,7 +19,6 @@ internal static class MenuInputs
                     "Create a new stack",
                     "View all stacks",
                     "Inspect a Stack",
-                    "Delete a stack",
                     "Back to Main Menu"
                 }));
     
@@ -122,8 +121,9 @@ internal static class MenuInputs
                 .AddChoices(new[]
                 {
                     "Add a new card",
-                    "Select a card",
+                    "Inspect a card",
                     "View all cards",
+                    "Delete Stack",
                     "Back to Main Menu",
                 }));
 
@@ -142,6 +142,7 @@ internal static class MenuInputs
     internal static int GetCardIdInput()
     {
         int cardId = AnsiConsole.Ask<int>( "[bold blue]Enter card Id: [/]" );
+        
         return cardId;
     }
 }

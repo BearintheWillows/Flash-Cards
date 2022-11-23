@@ -14,17 +14,18 @@ internal class StackController
     private readonly FlashCardContext db;
 
 
-    public StackDto GetStackById( int id)
+    public StackDto? GetStackById( int id)
     {
-        Stack stack = db.GetStackById( id );
-        StackDto newStack = new StackDto
-        {
-            Id = stack.Id,
-            Name = stack.Name,
-            Count = db.GetCardCountByStackId( id )
-        };
+        Stack? stack = db.GetStackById( id );
+       
         if ( stack != null )
         {
+            StackDto newStack = new StackDto
+            {
+                Id = stack.Id,
+                Name = stack.Name,
+                Count = db.GetCardCountByStackId( id )
+            };
             return newStack;
         }
         else
@@ -38,7 +39,7 @@ internal class StackController
     //add card  
     public void AddCardToStack( int id, Card card)
     {
-        Stack stack = db.GetStackById( id );
+        Stack? stack = db.GetStackById( id );
         
         if ( stack != null )
         {
