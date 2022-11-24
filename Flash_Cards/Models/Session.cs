@@ -9,7 +9,6 @@ internal class Session
 {
     public int Id { get; set; }
     public int StackId { get; set; }
-    public int RoundId { get; set; }
     public int Total { get; set; }
     public DateTime SessionDate { get; set; }
 }

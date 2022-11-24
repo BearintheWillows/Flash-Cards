@@ -4,6 +4,7 @@ using Flash_Cards.UI;
 using Flash_Cards.View;
 using Models;
 using Spectre.Console;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Flash_Cards.Controllers;
@@ -197,13 +198,16 @@ internal class MenuController
         var stackId = DataInput.StackIdInput();
         var stack = stackController.GetStackById( stackId );
         var cards = db.GetAllCardsByStackId( stackId );
-      
+        List<Round> rounds = new();
+        var session = new Session { StackId = stackId, SessionDate = DateTime.Now  };
+
         int  roundNum = 1;
 
         while ( roundNum < cards.Count )
         {
             foreach ( var card in cards )
             {
+                var round = new Round { CardId = card.Id, RoundNumber = roundNum, SessionId = session.Id };
                 Console.Clear();
                 var rule = new Spectre.Console.Rule( $"[bold blue]Round {roundNum}[/]" );
                 AnsiConsole.Write( rule );
@@ -211,14 +215,29 @@ internal class MenuController
                 Console.WriteLine( "Press any key to reveal answer." );
                 Console.ReadKey();
                 AnsiConsole.MarkupLine( $"[green]{card.Answer}[/]" );
+                if (AnsiConsole.Confirm( $"[yellow] Did you guess correctly?[/]" ))
+                {
+                    round.Correct = 1;
+                }
+                else
+                {
+                    round.Correct = 0;
+                }
+   
                 Console.WriteLine( "Press any key to continue." );
                 Console.ReadKey();
                 roundNum++;
+
+                rounds.Add( round );
             }
+            IEnumerable < Round > TotalQuery = rounds.AsQueryable().Where( r => r.Correct == 1 );
+            session.Total = TotalQuery.Count();
         }
         Console.Clear();
         var endRule = new Spectre.Console.Rule( "[bold blue]End of Stack[/]" );
         AnsiConsole.Write( endRule );
+        AnsiConsole.MarkupLine( $"[green]You got {session.Total} correct out of {rounds.Count}[/]" );
+        SessionController.AddSession( session, rounds, db );
         MenuViews.ContinueConfirm();
         MainMenu();
     }

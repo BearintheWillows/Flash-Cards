@@ -2,6 +2,7 @@
 using Models;
 using Serilog;
 using Spectre.Console;
+using System.Data;
 using System.Data.SqlClient;
 using System.Reflection.Metadata;
 
@@ -17,8 +18,9 @@ internal class FlashCardContext
     {
         CreateStacksTable();
         CreateFlashCardTable();
-        CreateRoundsTable();
         CreateSessionsTable();
+        CreateRoundsTable();
+        
         
 
     }
@@ -33,7 +35,6 @@ internal class FlashCardContext
                             Id INT IDENTITY(1,1) PRIMARY KEY,
                             Total INT,
                             SessionDate DATETIME,
-                            RoundId int FOREIGN KEY REFERENCES rounds(id),
                             StackId int FOREIGN KEY REFERENCES stacks(Id)
                             )";
         cmd.ExecuteNonQuery();
@@ -48,7 +49,9 @@ internal class FlashCardContext
                             CREATE TABLE rounds(
                             Id INT IDENTITY(1,1) PRIMARY KEY,
                             Correct BIT,
-                            CardId int FOREIGN KEY REFERENCES flashcards(Id)
+                            CardId int FOREIGN KEY REFERENCES flashcards(Id),
+                            SessionId int FOREIGN KEY REFERENCES sessions(Id),
+                            RoundNumber int
                             )";
             cmd.ExecuteNonQuery();
     }
@@ -288,5 +291,45 @@ internal class FlashCardContext
         command.CommandText = @"DELETE FROM flashcards WHERE Id = @id";
         command.Parameters.AddWithValue( "@id", id );
         command.ExecuteNonQuery();
+    }
+
+    internal decimal AddSession( Session session )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"INSERT INTO sessions (StackId, SessionDate, Total)
+                                    VALUES (@stackId, @sessionDate, @total)";
+        command.Parameters.AddWithValue( "@stackId", session.StackId );
+        command.Parameters.AddWithValue( "@sessionDate", session.SessionDate );
+        command.Parameters.AddWithValue( "@total", session.Total );
+        command.ExecuteNonQuery();
+        //get session id
+        command.CommandText = @"SELECT @@IDENTITY";
+        var reader = command.ExecuteReader();
+        reader.Read();
+        var sessionId = (decimal)reader[0];
+        return sessionId;
+    }
+
+    internal void AddRounds( List<Round> rounds )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        for ( int i = 0; i < rounds.Count; i++ )
+        {
+            command.CommandText = @"INSERT INTO rounds (SessionId, CardId, Correct, RoundNumber)
+                                    VALUES (@sessionId, @cardId, @correct, @roundNumber)";
+
+            command.Parameters.AddWithValue( "@sessionId", rounds[i].SessionId );
+            command.Parameters.AddWithValue( "@cardId", rounds[i].CardId );
+            command.Parameters.AddWithValue( "@correct", rounds[i].Correct );
+            command.Parameters.AddWithValue( "@roundNumber", rounds[i].RoundNumber );
+            
+            command.ExecuteNonQuery();
+            command.Parameters.Clear();
+        }
+        
     }
 }
