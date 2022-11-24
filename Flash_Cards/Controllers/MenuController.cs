@@ -61,6 +61,7 @@ internal class MenuController
 
     private void InspectStackMenu(StackDto stack)
     {
+        stack = stackController.GetStackById( stack.Id )!;
         DataViews.ViewById( stack );
         int cardId = 0;
         string choice = MenuInputs.GetInspectStackMenuInput();
@@ -138,16 +139,18 @@ internal class MenuController
             case "delete card":
                 if ( MenuInputs.ConfirmChoice() )
                 {
-                   // db.DeleteCard( id );
+                    db.DeleteCard( card.Id );
                     var deleteRule = new Rule( "[bold red] Record Deleted[/]" );
                     AnsiConsole.Write( deleteRule );
-                    
+                    MenuViews.ContinueConfirm();
+
                 }
                 else
                 {
                     var notDeleteRule = new Rule( "[bold red] Record NOT Deleted[/]" );
                     AnsiConsole.Write( notDeleteRule );
-                 
+                    MenuViews.ContinueConfirm();
+
                 }
                 break;
             case "back to stack":

@@ -1,4 +1,5 @@
-﻿using Flash_Cards.Models;
+﻿using Flash_Cards.Controllers;
+using Flash_Cards.Models;
 using Models;
 using Spectre.Console;
 using System;
@@ -80,6 +81,7 @@ internal class DataViews
     /// <param name="stack"></param>
     public static void ViewById<T>( T obj)
     {
+        
         Console.Clear();
         if ( obj is StackDto stack )
         {

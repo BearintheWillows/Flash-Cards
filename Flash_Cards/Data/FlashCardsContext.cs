@@ -223,4 +223,14 @@ internal class FlashCardContext
         command.Parameters.AddWithValue( "@id", card.Id );
         command.ExecuteNonQuery();
     }
+
+    internal void DeleteCard( int id )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"DELETE FROM flashcards WHERE Id = @id";
+        command.Parameters.AddWithValue( "@id", id );
+        command.ExecuteNonQuery();
+    }
 }

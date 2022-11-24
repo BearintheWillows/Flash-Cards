@@ -101,7 +101,6 @@ internal static class MenuInputs
     {
         if ( AnsiConsole.Confirm( "Are you sure you want to delete?" ) )
         {
-            AnsiConsole.MarkupLine( "[bold green]Record Deleted[/]" );
             return true;
 
         }
@@ -146,6 +145,7 @@ internal static class MenuInputs
         
         return cardId;
     }
+   
 
     internal static string GetInspectCardMenuInput()
     {

@@ -16,5 +16,11 @@ internal static class MenuViews
 
     }
 
-    
+    internal static void ContinueConfirm(){
+        var rule = new Rule( "[bold green]Press any key to continue...[/]" );
+        AnsiConsole.Write( rule );
+        Console.ReadKey();
+    }
+
+
 }
