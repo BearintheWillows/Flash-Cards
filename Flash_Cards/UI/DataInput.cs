@@ -32,7 +32,7 @@ internal class DataInput
 
     internal static int StackIdInput()
     {
-        var id = AnsiConsole.Ask<int>( "Please enter the Id of the stack you would like to view:" );
+        var id = AnsiConsole.Ask<int>( "Please enter the Id of the stack: " );
         return id;
     }
 }

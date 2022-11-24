@@ -1,6 +1,7 @@
 ﻿using Flash_Cards.Models;
 using Models;
 using Serilog;
+using Spectre.Console;
 using System.Data.SqlClient;
 using System.Reflection.Metadata;
 
@@ -26,7 +27,7 @@ internal class FlashCardContext
             command.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='stacks' AND xtype='U')
                             CREATE TABLE stacks(
                             Id INT IDENTITY(1,1) PRIMARY KEY,
-                            Name VARCHAR(255) NOT NULL,
+                            Name VARCHAR(255) NOT NULL UNIQUE,
                             )";
             connection.Open();
             command.ExecuteNonQuery();
@@ -70,7 +71,26 @@ internal class FlashCardContext
         command.CommandText = @"INSERT INTO Stacks (Name)
                                     VALUES (@name)";
         command.Parameters.AddWithValue( "@name", stack.Name );
-        command.ExecuteNonQuery();
+
+        try
+        {
+            command.ExecuteNonQuery();
+            Log.Information( "Stack Added Successfully" );
+        }
+        catch ( Exception e )
+        {
+            if ( e.Message.Contains( "Violation of UNIQUE KEY constraint" ) )
+            {
+                AnsiConsole.MarkupLine( $"[bold red] Stack already exists. NOT SAVED.[/]" );
+                Log.Warning( "Stack already exists" );
+            }
+            else
+            {
+                Log.Error( e.Message );
+            }
+        }
+
+
     }
 
     //view stacks
