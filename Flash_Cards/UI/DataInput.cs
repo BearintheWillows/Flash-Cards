@@ -30,7 +30,7 @@ internal class DataInput
         return card;
     }
 
-    internal static int IdInput()
+    internal static int StackIdInput()
     {
         var id = AnsiConsole.Ask<int>( "Please enter the Id of the stack you would like to view:" );
         return id;

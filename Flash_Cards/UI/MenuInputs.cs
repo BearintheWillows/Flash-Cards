@@ -164,4 +164,19 @@ internal static class MenuInputs
             return menuChoice;
         }
     }
+
+    internal static string PlayStackMenuInput()
+    {
+        var menuChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Please select an option:")
+                    .PageSize(10)
+                    .AddChoices(new[]
+                    {
+                        "Play Stack",
+                        "Back to Main Menu",
+                    }));
+
+        return menuChoice;
+    }
 }

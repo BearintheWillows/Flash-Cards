@@ -4,6 +4,7 @@ using Flash_Cards.UI;
 using Flash_Cards.View;
 using Models;
 using Spectre.Console;
+using System.Data;
 
 namespace Flash_Cards.Controllers;
 internal class MenuController
@@ -36,7 +37,7 @@ internal class MenuController
                 ManageStackMenu();
                 break;
             case "inspect a stack":
-                int id = DataInput.IdInput();
+                int id = DataInput.StackIdInput();
                 StackDto? stack = stackController.GetStackById(id);
 
                 if ( stack != null )
@@ -46,7 +47,7 @@ internal class MenuController
                 else
                 {
                     Console.Clear();
-                    Rule rule = new Rule( "[bold red]Stack not found.[/]" );
+                    var rule = new Spectre.Console.Rule( "[bold red]Stack not found.[/]" );
                     AnsiConsole.Write( rule );
                     ManageStackMenu();
                 }
@@ -107,14 +108,14 @@ internal class MenuController
                 if ( MenuInputs.ConfirmChoice() )
                 {
                     db.DeleteStackAndCards( stack.Id );
-                    var rule = new Rule($"[bold red] Record Deleted[/]");
+                    var rule = new Spectre.Console.Rule($"[bold red] Record Deleted[/]");
                     AnsiConsole.Write( rule );
 
                     ManageStackMenu();
                 }
                 else
                 {
-                    var rule = new Rule("[bold red] Record NOT Deleted[/]");
+                    var rule = new Spectre.Console.Rule("[bold red] Record NOT Deleted[/]");
                     AnsiConsole.Write( rule );
                     InspectStackMenu( stack );
                 }
@@ -127,7 +128,7 @@ internal class MenuController
     {
         Console.Clear();
         DataViews.ViewById( card );
-        Rule rule = new Rule( $"[bold blue]Inspecting: Card #{card.StackPosition} from Stack: {stack.Name}[/]" );
+        var rule = new Spectre.Console.Rule( $"[bold blue]Inspecting: Card #{card.StackPosition} from Stack: {stack.Name}[/]" );
         AnsiConsole.Write( rule );
         string input = MenuInputs.GetInspectCardMenuInput();
         switch ( input.ToLower( System.Globalization.CultureInfo.InvariantCulture ) )
@@ -140,14 +141,14 @@ internal class MenuController
                 if ( MenuInputs.ConfirmChoice() )
                 {
                     db.DeleteCard( card.Id );
-                    var deleteRule = new Rule( "[bold red] Record Deleted[/]" );
+                    var deleteRule = new Spectre.Console.Rule( "[bold red] Record Deleted[/]" );
                     AnsiConsole.Write( deleteRule );
                     MenuViews.ContinueConfirm();
 
                 }
                 else
                 {
-                    var notDeleteRule = new Rule( "[bold red] Record NOT Deleted[/]" );
+                    var notDeleteRule = new Spectre.Console.Rule( "[bold red] Record NOT Deleted[/]" );
                     AnsiConsole.Write( notDeleteRule );
                     MenuViews.ContinueConfirm();
 
@@ -172,9 +173,11 @@ internal class MenuController
         switch ( choice )
         {
             case "Play a Stack!":
-                //TODO
+                Console.Clear();
+                PlayStackMenu();
+                break;
 
-                
+
             case "Manage Stacks!":
                 Console.Clear();
                 ManageStackMenu();
@@ -188,4 +191,35 @@ internal class MenuController
         }
         return exitProgram;
     }
+
+    private void PlayStackMenu()
+    {
+        var stackId = DataInput.StackIdInput();
+        var stack = stackController.GetStackById( stackId );
+        var cards = db.GetAllCardsByStackId( stackId );
+        var round = 1;
+
+        while ( round < cards.Count )
+        {
+            foreach ( var card in cards )
+            {
+                Console.Clear();
+                var rule = new Spectre.Console.Rule( $"[bold blue]Round {round}[/]" );
+                AnsiConsole.Write( rule );
+                AnsiConsole.MarkupLine( $"[yellow] Question: {card.Question}[/]" );
+                Console.WriteLine( "Press any key to reveal answer." );
+                Console.ReadKey();
+                AnsiConsole.MarkupLine( $"[green]{card.Answer}[/]" );
+                Console.WriteLine( "Press any key to continue." );
+                Console.ReadKey();
+                round++;
+            }
+        }
+        Console.Clear();
+        var endRule = new Spectre.Console.Rule( "[bold blue]End of Stack[/]" );
+        AnsiConsole.Write( endRule );
+        MenuViews.ContinueConfirm();
+        MainMenu();
+    }
+       
 }
