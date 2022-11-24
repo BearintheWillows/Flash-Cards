@@ -1,5 +1,6 @@
 ﻿using Models;
 using Spectre.Console;
+using System.Runtime.CompilerServices;
 
 namespace Flash_Cards.UI;
 internal static class MenuInputs
@@ -144,5 +145,23 @@ internal static class MenuInputs
         int cardId = AnsiConsole.Ask<int>( "[bold blue]Enter card Id: [/]" );
         
         return cardId;
+    }
+
+    internal static string GetInspectCardMenuInput()
+    {
+        {
+            var menuChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Please select an option:")
+                .PageSize(10)
+                .AddChoices(new[]
+                {
+                    "Update card",
+                    "Delete card",
+                    "Back to Stack",
+                }));
+
+            return menuChoice;
+        }
     }
 }

@@ -211,4 +211,16 @@ internal class FlashCardContext
         }
         return cards;
     }
+
+    internal void UpdateCard( CardDto card )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"UPDATE flashcards SET Question = @question, Answer = @answer WHERE Id = @id";
+        command.Parameters.AddWithValue( "@question", card.Question );
+        command.Parameters.AddWithValue( "@answer", card.Answer );
+        command.Parameters.AddWithValue( "@id", card.Id );
+        command.ExecuteNonQuery();
+    }
 }

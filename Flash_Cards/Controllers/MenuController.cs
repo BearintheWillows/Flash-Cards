@@ -65,6 +65,8 @@ internal class MenuController
         int cardId = 0;
         string choice = MenuInputs.GetInspectStackMenuInput();
         Console.Clear();
+        List<CardDto> cards = db.GetAllCardsByStackId( stack.Id );
+        cards = (List<CardDto>)CardController.SetStackPositions( cards );
         switch ( choice.ToLower() )
         {
             case "add a new card":
@@ -73,7 +75,6 @@ internal class MenuController
                 InspectStackMenu( stack );
                 break;
             case "view all cards":
-                List<CardDto> cards = db.GetAllCardsByStackId( stack.Id );
                 if ( cards != null )
                 {
                     DataViews.ViewAll( cards );
@@ -86,10 +87,10 @@ internal class MenuController
                 break;
             case "inspect a card":
                  cardId = MenuInputs.GetCardIdInput();
-                CardDto? cardChoice = db.GetCardById( cardId );
+                CardDto? cardChoice = cards.AsQueryable().FirstOrDefault( c => c.StackPosition == cardId );
                 if ( cardChoice != null )
                 {
-                    DataViews.ViewById( cardChoice );
+                    InspectCardMenu( cardChoice, stack );
                 }
                 else
                 {
@@ -121,36 +122,40 @@ internal class MenuController
         }
     }
 
-    /*public void InspectACardMenu( int id )
+    public void InspectCardMenu( CardDto card, StackDto stack )
     {
-        string choice = MenuInputs.GetInspectACardMenuInput();
         Console.Clear();
-        switch ( choice.ToLower() )
+        DataViews.ViewById( card );
+        Rule rule = new Rule( $"[bold blue]Inspecting: Card #{card.StackPosition} from Stack: {stack.Name}[/]" );
+        AnsiConsole.Write( rule );
+        string input = MenuInputs.GetInspectCardMenuInput();
+        switch ( input.ToLower( System.Globalization.CultureInfo.InvariantCulture ) )
         {
-            case "edit card":
-                var card = MenuInputs.GetNewCardInput();
-                db.UpdateCard( id, card );
+            case "update card":
+                CardController.EditCard( card, db );
+                //db.UpdateCard( id, card );
                 break;
             case "delete card":
                 if ( MenuInputs.ConfirmChoice() )
                 {
-                    db.DeleteCard( id );
-                    var rule = new Rule( "[bold red] Record Deleted[/]" );
-                    AnsiConsole.Write( rule );
-                    ManageStackMenu();
+                   // db.DeleteCard( id );
+                    var deleteRule = new Rule( "[bold red] Record Deleted[/]" );
+                    AnsiConsole.Write( deleteRule );
+                    
                 }
                 else
                 {
-                    var rule = new Rule( "[bold red] Record NOT Deleted[/]" );
-                    AnsiConsole.Write( rule );
-                    InspectStackMenu( id );
+                    var notDeleteRule = new Rule( "[bold red] Record NOT Deleted[/]" );
+                    AnsiConsole.Write( notDeleteRule );
+                 
                 }
                 break;
-            case "back to stack menu":
-                InspectStackMenu( id );
+            case "back to stack":
+                InspectStackMenu( stack );
                 break;
         }
-    }*/
+        InspectStackMenu( stack );
+    }
 
     public bool MainMenu()
     {

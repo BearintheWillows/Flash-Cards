@@ -96,7 +96,7 @@ internal class DataViews
             table.AddColumn( "Id" );
             table.AddColumn( "Front" );
             table.AddColumn( "Back" );
-            table.AddRow( card.Id.ToString(), card.Question, card.Answer );
+            table.AddRow( card.StackPosition.ToString(), card.Question, card.Answer );
             AnsiConsole.Write( table );
         }
     }
