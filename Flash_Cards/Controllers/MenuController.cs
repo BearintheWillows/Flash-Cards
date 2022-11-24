@@ -197,14 +197,15 @@ internal class MenuController
         var stackId = DataInput.StackIdInput();
         var stack = stackController.GetStackById( stackId );
         var cards = db.GetAllCardsByStackId( stackId );
-        var round = 1;
+      
+        int  roundNum = 1;
 
-        while ( round < cards.Count )
+        while ( roundNum < cards.Count )
         {
             foreach ( var card in cards )
             {
                 Console.Clear();
-                var rule = new Spectre.Console.Rule( $"[bold blue]Round {round}[/]" );
+                var rule = new Spectre.Console.Rule( $"[bold blue]Round {roundNum}[/]" );
                 AnsiConsole.Write( rule );
                 AnsiConsole.MarkupLine( $"[yellow] Question: {card.Question}[/]" );
                 Console.WriteLine( "Press any key to reveal answer." );
@@ -212,7 +213,7 @@ internal class MenuController
                 AnsiConsole.MarkupLine( $"[green]{card.Answer}[/]" );
                 Console.WriteLine( "Press any key to continue." );
                 Console.ReadKey();
-                round++;
+                roundNum++;
             }
         }
         Console.Clear();

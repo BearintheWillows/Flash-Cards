@@ -17,8 +17,42 @@ internal class FlashCardContext
     {
         CreateStacksTable();
         CreateFlashCardTable();
+        CreateRoundsTable();
+        CreateSessionsTable();
+        
 
     }
+
+    private void CreateSessionsTable()
+    {
+        using SqlConnection connection = new SqlConnection( _connectionString );
+        connection.Open();
+        SqlCommand cmd = connection.CreateCommand();
+        cmd.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='sessions' AND xtype='U')
+                            CREATE TABLE sessions (
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            Total INT,
+                            SessionDate DATETIME,
+                            RoundId int FOREIGN KEY REFERENCES rounds(id),
+                            StackId int FOREIGN KEY REFERENCES stacks(Id)
+                            )";
+        cmd.ExecuteNonQuery();
+    }
+    
+    private void CreateRoundsTable()
+    {
+            using SqlConnection connection = new SqlConnection( _connectionString );
+            connection.Open();
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = @"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='rounds' AND xtype='U')
+                            CREATE TABLE rounds(
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            Correct BIT,
+                            CardId int FOREIGN KEY REFERENCES flashcards(Id)
+                            )";
+            cmd.ExecuteNonQuery();
+    }
+
     private void CreateStacksTable()
     {
         {
@@ -33,6 +67,8 @@ internal class FlashCardContext
             command.ExecuteNonQuery();
         }
     }
+    
+    
 
     //Create table
     private void CreateFlashCardTable()
