@@ -1,5 +1,7 @@
 ﻿using Flash_Cards.Data;
 using Flash_Cards.Models;
+using Flash_Cards.UI;
+using Flash_Cards.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +19,20 @@ internal static class SessionController
             item.SessionId = (int)Id;
         } 
         db.AddRounds( rounds );
+    }
+
+    internal static void ViewAllSessions(FlashCardContext db)
+    {
+        List<Session> sessions = db.GetAllSessions();
+        DataViews.ViewAll( sessions );
+    }
+
+    //view sessions by stackid
+    internal static void ViewSessionsByStackId( FlashCardContext db )
+    {
+        int stackId = DataInput.StackIdInput();
+        List<Session> sessions = db.GetAllSessions();
+        sessions = sessions.Where( s => s.StackId == stackId ).ToList();
+        DataViews.ViewAll( sessions );
     }
 }

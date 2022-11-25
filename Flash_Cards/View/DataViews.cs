@@ -1,6 +1,7 @@
 ﻿using Flash_Cards.Controllers;
 using Flash_Cards.Models;
 using Models;
+using Serilog;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,13 @@ internal class DataViews
     {
         var table = new Table().Expand();
         var rowNum = 1;
-        
+
         if ( obj is IEnumerable<StackDto> stack )
         {
             table.AddColumn( "Id" );
             table.AddColumn( "Name" );
             table.AddColumn( "Card Count" );
-            
+
 
             foreach ( var item in stack )
             {
@@ -44,12 +45,13 @@ internal class DataViews
                 rowNum++;
             }
 
-        } else if (obj is IEnumerable<CardDto> card)
+        }
+        else if ( obj is IEnumerable<CardDto> card )
         {
             table.AddColumn( "Id" );
             table.AddColumn( "Front" );
             table.AddColumn( "Back" );
-            
+
             foreach ( var item in card )
             {
                 if ( rowNum % 2 == 0 )
@@ -66,8 +68,20 @@ internal class DataViews
                 rowNum++;
             }
         }
+        else if (obj is List<Session> sessions )
+        {
+            table.AddColumns( "Session Date" );
+            table.AddColumns( "Stack Id" );
+            table.AddColumns( "Total Correct" );
 
+            foreach ( var item in sessions )
+            {
 
+                table.AddRow( item.SessionDate.ToString(), item.StackId.ToString(), item.Total.ToString() );
+            }
+
+        }
+        Log.Information(obj.GetType().ToString());
         AnsiConsole.Write( table );
         var rule = new Rule("[bold green]Press any key to return to the menu[/]");
         AnsiConsole.Write( rule );

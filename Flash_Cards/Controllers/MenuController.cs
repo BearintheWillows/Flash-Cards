@@ -109,6 +109,7 @@ internal class MenuController
                 if ( MenuInputs.ConfirmChoice() )
                 {
                     db.DeleteStackAndCards( stack.Id );
+                    db.DeleteSessions( stack.Id );
                     var rule = new Spectre.Console.Rule($"[bold red] Record Deleted[/]");
                     AnsiConsole.Write( rule );
 
@@ -184,13 +185,34 @@ internal class MenuController
                 ManageStackMenu();
                 break;
             case "View Sessions":
-                //TODO
-              
+                Console.Clear();
+                ManageViewSessionsMenu();
+                SessionController.ViewAllSessions(db);
+                break;
+
             case "Exit":
                 exitProgram = true;
                 break;
         }
         return exitProgram;
+    }
+
+    private void ManageViewSessionsMenu()
+    {
+        string choice = MenuInputs.GetManageSessionsMenuInput();
+        switch ( choice )
+        {
+            case "View All Sessions":
+                SessionController.ViewAllSessions( db );
+                break;
+            case "View Sessions by Stack":
+                SessionController.ViewSessionsByStackId( db );
+                MainMenu();
+                break;
+            case "Back to Main Menu":
+                MainMenu();
+                break;
+        }
     }
 
     private void PlayStackMenu()

@@ -179,4 +179,20 @@ internal static class MenuInputs
 
         return menuChoice;
     }
+
+    internal static string GetManageSessionsMenuInput()
+    {
+        var menuChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Please select an option:")
+                    .PageSize(10)
+                    .AddChoices(new[]
+                    {
+                        "View all Sessions",
+                        "View Sessions by Stack",
+                        "Back to Main Menu",
+                    }));
+
+        return menuChoice;
+    }
 }

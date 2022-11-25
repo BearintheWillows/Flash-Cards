@@ -332,4 +332,40 @@ internal class FlashCardContext
         }
         
     }
+
+    internal void DeleteSessions( int id )
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"DELETE FROM sessions WHERE StackId = @id";
+        command.Parameters.AddWithValue( "@id", id );
+        command.ExecuteNonQuery();
+    }
+
+    internal List<Session> GetAllSessions()
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = connection.CreateCommand();
+        connection.Open();
+        command.CommandText = @"SELECT * FROM sessions";
+        var reader = command.ExecuteReader();
+       
+        List<Session> sessions = new();
+        while ( reader.Read() )
+        {
+            
+                sessions.Add( new Session
+                {
+                    Id = (int)reader["Id"],
+                    StackId = (int)reader["StackId"],
+                    SessionDate = (DateTime)reader["SessionDate"],
+                    Total = (int)reader["Total"],
+                } );
+
+
+        }
+      
+        return sessions;
+    }
 }
